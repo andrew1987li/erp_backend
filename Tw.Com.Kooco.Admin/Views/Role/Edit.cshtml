@@ -1,0 +1,117 @@
+﻿@using Newtonsoft.Json
+@using System.Data;
+@using Tw.Com.Kooco.Admin.Models.Parameters
+@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+
+@{
+    ViewBag.Title = "編輯";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+
+    List<string> RoleAction = new List<string>();
+
+    var ID = string.Empty;
+    var Name = string.Empty;
+    var Description = string.Empty;
+    var Disable = string.Empty;
+
+    var ds = (DataSet)Model.Data;
+    var actionsTable = ds.Tables[0];
+
+    if (ds.Tables.Count > 1)
+    {
+        DataRow row = ds.Tables[1].Rows[0];
+        ID = row["ID"].ToString();
+        Name = row["Name"].ToString();
+        Description = row["Description"].ToString();
+        Disable = (Convert.ToBoolean(row["Disable"])) ? "checked" : "";
+
+        DataTable RoleActionTable = ds.Tables[2];
+        foreach (DataRow r in RoleActionTable.Rows)
+        {
+            RoleAction.Add(r["ActionID"].ToString());
+        }
+    }
+
+}
+
+<div class="portlet-body form">
+    <!-- BEGIN FORM-->
+    <form action="#" id="form1" class="form-horizontal form-bordered form-row-stripped">
+        <input type="hidden" name="ID" value="@ID" />
+        <div class="form-body">
+            <div class="form-group required">
+                <label class="col-md-3 control-label">角色名稱</label>
+                <div class="col-md-9">
+                    <input type="text" name="Name" class="form-control" value="@Name" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">描述</label>
+                <div class="col-md-9">
+                    <input type="text" name="Description" class="form-control" value="@Description" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">停用</label>
+                <div class="col-md-9">
+                    <input type="checkbox" name="Disable" @Disable value="1" class="make-switch" data-size="normal">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">權限</label>
+                <div class="col-md-9">
+                    <button type="button" class="btn btn-primary js_all_on">全開</button>
+                    <button type="button" class="btn btn-default js_all_off">全關</button>
+                    <div class="table-scrollable">
+                        <table class="table table-bordered table-hover" id="list">
+                            <thead>
+                                <tr>
+                                    <th>加入</th>
+                                    <th>路徑</th>
+                                    <th>名稱</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    foreach (DataRow row in actionsTable.Rows)
+                                    {
+                                        if (Convert.ToBoolean(row["Default"]))
+                                        {
+                                            continue;
+                                        }
+
+                                        var ActionID = row["ID"].ToString();
+                                        var Area = row["Area"].ToString();
+                                        var Controller = row["Controller"].ToString();
+                                        var Action = row["Action"].ToString();
+                                        var path = (Area.Equals("")) ? string.Format("/{0}/{1}", Controller, Action) : string.Format("/{0}/{1}/{2}", Area, Controller, Action);
+
+                                        string Checked = (RoleAction.Contains(ActionID)) ? "checked" : "";
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" name="ActionIDs" @Checked value="@ActionID">
+                                            </td>
+                                            <td>@path</td>
+                                            <td>@row["Name"]</td>
+                                            <td>@row["Description"]</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-offset-3 col-md-9">
+                    <button type="submit" class="btn btn-primary js_submit"><i class="fa fa-check"></i> Save</button>
+                    <button type="button" class="btn btn-default js_back">back to list</button>
+                </div>
+            </div>
+        </div>
+            </div>
+    </form>
+    <!-- END FORM-->
+</div>

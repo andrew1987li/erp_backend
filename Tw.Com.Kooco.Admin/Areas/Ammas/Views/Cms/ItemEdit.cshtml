@@ -1,0 +1,112 @@
+﻿@{ViewBag.Title = "項目編輯";}
+@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+@using Newtonsoft.Json
+@using Tw.Com.Kooco.Admin.Areas.Ammas.Models.Parameters
+@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    var data = (ConstructionItemParameter)Model.Data;
+    var js = $"<script type='text/javascript'>var data = {JsonConvert.SerializeObject(data)};</script>";
+}
+
+@section PageLevel {
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/bootstrap-datepicker/css/datepicker3.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />
+    @*<link rel="stylesheet" type="text/css" href="/Content/global/plugins/select2/select2.css" />
+        <link rel="stylesheet" type="text/css" href="/Content/global/plugins/datatables/extensions/Scroller/css/dataTables.scroller.min.css" />
+        <link rel="stylesheet" type="text/css" href="/Content/global/plugins/datatables/extensions/ColReorder/css/dataTables.colReorder.min.css" />
+        <link rel="stylesheet" type="text/css" href="/Content/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="/Content/global/plugins/bootstrap-datepicker/css/datepicker3.css" />
+        <link rel="stylesheet" type="text/css" href="/Content/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />*@
+}
+
+@section FooterScript{@MvcHtmlString.Create(js)}
+
+<div class="notifications bottom-left"></div>
+
+<div class="portlet-body form">
+    <!-- BEGIN FORM-->
+    <form action="#" id="form_1" class="form-horizontal form-bordered form-row-stripped">
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12 form-inline">
+                <span class="h2">@(data.Entity.Id == 0 ? "新增工程項目" : "編輯工程項目")</span>
+                <div style="float:right;">
+                    <button type="submit" class="btn btn-primary js_submit"><i class="fa fa-check"></i>Save</button> |
+                    <button type="button" class="btn btn-default js_back">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <div class="form-group required">
+                <input type="hidden" id="Id" name="Entity.Id" value="@data.Entity.Id" readonly />
+                <input type="hidden" id="DateChange" name="Entity.DateChange" value="@data.Entity.DateChange" readonly />
+            </div>
+            <div class="form-group required">
+                <label class="col-md-3 control-label">項目名稱</label>
+                <div class="col-md-9">
+                    <input type="text" id="Name" name="Entity.Name" class="form-control" placeholder="請輸入項目名稱" value="@data.Entity.Name" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">單價(每單位)</label>
+                <div class="col-md-9">
+                    <input type="text" id="Price" name="Entity.Price" class="form-control" placeholder="請輸入單價金額" value="@data.Entity.Price" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" >
+                    @*<input type="text" id="Price" name="Entity.Price" class="form-control" placeholder="請輸入單價金額" value="@data.Entity.Price" />*@
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">計算單位</label>
+                <div class="col-md-9">
+                    <input type="text" id="Unit" name="Entity.Unit" class="form-control" placeholder="請輸入單位(ex:公斤、公分、公噸…)" value="@data.Entity.Unit">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+@*<form>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 form-inline">
+            <span class="h2">項目編輯</span>
+            <div style="float:right;">
+
+
+
+                <button type="button" class="btn btn-primary" id="reset">取消</button>
+                <button type="button" class="btn btn-primary" id="add">儲存</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group row">
+        <label class="h4">項目編號</label><label class="h4">112</label>
+    </div>
+    <div class="form-group row">
+        <label class="h4">項目名稱</label>
+        <input style="display:block;" type="text" placeholder="請輸入項目名稱" />
+    </div>
+    <hr />
+    <h3>工程內容</h3>
+
+    <div class="col-md-12 col-sm-12">
+        <div class="table-scrollable">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr> <th>工程項目</th> <th>單價</th> <th>單位</th>  </tr>
+                </thead>
+                <tbody>
+                    <tr> <th scope="row">混泥土</th> <td>100</td>  <td>M3</td></tr>
+                    <tr> <th scope="row">地磚</th> <td>100</td>  <td>M3</td></tr>
+                    <tr> <th scope="row">稀酸鈣板</th> <td>100</td>  <td>M3</td></tr>
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+</form>
+*@

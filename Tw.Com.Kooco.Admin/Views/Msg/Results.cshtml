@@ -1,0 +1,36 @@
+﻿@using Tw.Com.Kooco.Admin.Models.Msg
+@model IList<Tw.Com.Kooco.Admin.Models.Msg.Results>
+
+
+@{
+    ViewBag.Title = "Results";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    int index = 0;
+}
+
+<h2>结果</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>PhonNumber</th>
+                <th>Sid</th>
+                <th>State</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Results result in Model) {
+
+                index++;
+                <tr>
+                    <th scope="row">@index</th>
+                    <td>@result.phonenumber</td>
+                    <td>@result.sid</td>
+                    <td>@result.state</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+

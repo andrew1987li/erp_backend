@@ -1,0 +1,68 @@
+﻿@model SiteMapHelperModel
+
+@helper  CreateMenu(List<SiteMapNodeModel> nodeList, int dep)
+{
+    foreach (SiteMapNodeModel node in nodeList)
+    {
+        string title = node.Title.ToString();
+        if (title.StartsWith("@"))
+        {
+            continue;
+        }
+
+        string li_class = null;
+        string css_active = null;
+        string css_open = null;
+
+        if (dep == 1)
+        {
+            if (node == nodeList.First())
+            {
+                li_class = "start";
+            }
+            else if (node == nodeList.Last())
+            {
+                li_class = "last";
+            }
+        }
+
+        if (node.IsInCurrentPath)
+        {
+            css_active = "active";
+            css_open = "open";
+        }
+
+        string target = node.IsClickable ? node.Url : "javascript:;";
+
+        <li class="@li_class @css_active @css_open">
+            <a href="@target">
+                <i class="@node.Attributes["icon"].ToString()"></i>
+                <span class="title">@node.Title</span>
+                @if (node.IsInCurrentPath)
+                {
+                    <span class="selected"></span>
+                }
+                @if (node.Children.Any())
+                {
+                    <span class="arrow @css_open"></span>
+                }
+            </a>
+            @if (node.Children.Any())
+            {
+                <ul class="sub-menu">
+                    @CreateMenu(node.Children, dep + 1)
+                </ul>
+            }
+        </li>
+    }
+}
+
+<ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+    <li class="sidebar-toggler-wrapper">
+        <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+        <div class="sidebar-toggler">
+        </div>
+        <!-- END SIDEBAR TOGGLER BUTTON -->
+    </li>
+    @CreateMenu(Model.Nodes[0].Children, 1)
+</ul>

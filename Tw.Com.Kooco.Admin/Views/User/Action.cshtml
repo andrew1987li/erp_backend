@@ -1,0 +1,90 @@
+﻿@using System.Collections
+@using System.Data
+@using Newtonsoft.Json
+@using Tw.Com.Kooco.Admin.Misc.Definition
+@using Tw.Com.Kooco.Admin.Models.Parameters
+@using Tw.Com.Kooco.Admin.Providers
+@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    var detail = ((UserParameter)Model.Data).User;
+
+    List<string> UserAction = new List<string>();
+
+    var ds = (DataSet)Model.List;
+    var actionsTable = ds.Tables[0];
+
+    DataTable UserActionTable = ds.Tables[1];
+    foreach (DataRow r in UserActionTable.Rows)
+    {
+        UserAction.Add(r["ActionID"].ToString());
+    }
+
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <div class="portlet purple box">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i>Account : @detail.Account
+                </div>
+            </div>
+            <div class="portlet-body">
+                <form action="#" id="form1" class="form-horizontal form-bordered form-row-stripped">
+                    <input type="hidden" name="UserID" value="@detail.IdentityKey" />
+                    <button type="button" class="btn btn-primary js_all_on">全開</button>
+                    <button type="button" class="btn btn-default js_all_off">全關</button>
+                    <div class="table-scrollable">
+                        <table class="table table-bordered table-hover" id="list">
+                            <thead>
+                                <tr>
+                                    <th>加入</th>
+                                    <th>路徑</th>
+                                    <th>名稱</th>
+                                    <th>描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    foreach (DataRow row in actionsTable.Rows)
+                                    {
+                                        if (Convert.ToBoolean(row["Default"]))
+                                        {
+                                            continue;
+                                        }
+                                        var ActionID = row["ID"].ToString();
+                                        var Area = row["Area"].ToString();
+                                        var Controller = row["Controller"].ToString();
+                                        var Action = row["Action"].ToString();
+                                        var path = (Area.Equals("")) ? string.Format("/{0}/{1}", Controller, Action) : string.Format("/{0}/{1}/{2}", Area, Controller, Action);
+
+                                        string Checked = (UserAction.Contains(ActionID)) ? "checked" : "";
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" class="make-switch" name="ActionIDs" @Checked value="@ActionID">
+                                            </td>
+                                            <td>@path</td>
+                                            <td>@row["Name"]</td>
+                                            <td>@row["Description"]</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="form-actions">
+                        <div class="row">
+                            <div class="col-md-offset-3 col-md-9">
+                                <button type="submit" class="btn btn-primary js_submit"><i class="fa fa-check"></i> Save</button>
+                                <button type="button" class="btn btn-default js_back">back to list</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

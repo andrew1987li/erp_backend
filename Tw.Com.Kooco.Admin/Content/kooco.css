@@ -1,0 +1,37 @@
+﻿.form-group.required .control-label:after {
+    content: "*";
+    color: red;
+}
+
+.gray {
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    filter: grayscale(100%);
+    filter: gray;
+}
+
+/*.modal-dialog{
+    overflow-y: initial !important
+}
+.modal-body{
+    height: 600px;
+    overflow-y: auto;
+}*/
+
+#CardModal .modal-dialog{
+    overflow-y: initial !important
+}
+#CardModal .modal-body{
+    height: 600px;
+    overflow-y: auto;
+}
+
+#ItemModal .modal-dialog{
+    overflow-y: initial !important
+}
+#ItemModal .modal-body{
+    height: 600px;
+    overflow-y: auto;
+}

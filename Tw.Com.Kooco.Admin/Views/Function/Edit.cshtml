@@ -1,0 +1,137 @@
+﻿@using Newtonsoft.Json
+@using Tw.Com.Kooco.Admin.Models.Parameters
+@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+
+@{
+    ViewBag.Title = "功能設定";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    var param = (FunctionParameter)Model.Data;
+    var detail = param.Function;
+    var Controllers = param.Controllers;
+    //var js = string.Format("<script type='text/javascript'>var data={0};</script>", JsonConvert.SerializeObject(new { detail.FunctionId, detail.ParentFunctionId, detail.Owner }));
+    var js = string.Format("<script type='text/javascript'>var data={0};</script>", JsonConvert.SerializeObject(detail));
+
+    var js2 = string.Format("<script type='text/javascript'>var Controllers={0};</script>", JsonConvert.SerializeObject(Controllers));
+}
+
+@section FooterScript{@MvcHtmlString.Create(js) @MvcHtmlString.Create(js2)}
+
+<div class="portlet-body form">
+    <!-- BEGIN FORM-->
+    <form action="#" id="form1" class="form-horizontal form-bordered form-row-stripped">
+        <input type="hidden" name="Function.FunctionId" value="@detail.FunctionId">
+        <input type="hidden" name="Function.ParentFunctionId" value="@detail.ParentFunctionId">
+        <input type="hidden" name="Function.Priority" value="@detail.Priority">
+
+        <div class="form-body">
+            <div class="form-group required">
+                <label class="col-md-1 control-label">Name</label>
+                <div class="col-md-9">
+                    <input type="text" name="Function.Name" class="form-control" value="@detail.Name" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-1 control-label">Icon</label>
+                <div class="col-md-11">
+                    <input type="hidden" id="Function_Icon" name="Function.Icon" class="form-control" value="@detail.Icon">
+                    <p><span id="IconPreview" class="@detail.Icon" style="font-size:22px;"></span></p><br />
+                    <button type="button" class="btn btn-primary js_openModal">選擇</button>
+                    <button type="button" class="btn btn-default js_clearIcon">清除</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-1 control-label">目前路徑</label>
+                <div class="col-md-9">
+                    <span id="oldTarget">
+                        @{
+                            @detail.Target
+                        }
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-1 control-label">Area</label>
+                <div class="col-md-4">
+                    <select id="Area" name="Function.Area" class="form-control"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-1 control-label">Controller</label>
+                <div class="col-md-4">
+                    <select id="Controller" name="Function.Controller" class="form-control"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-1 control-label">Action</label>
+                <div class="col-md-4">
+                    <select id="Action" name="Function.Action" class="form-control"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-1 control-label">Parameter</label>
+                <div class="col-md-9">
+                    <input type="text" id="Parameters" name="Function.Parameters" class="form-control" value="@detail.Parameters">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-1 control-label">新路徑</label>
+                <div class="col-md-9">
+                    <input type="text" id="Target" name="Function.Target" class="form-control" value="">
+                    <br />
+                    <a href="#" id="linkTest" class="btn btn-sm btn-primary" target="_blank">新視窗測試連結</a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-1 control-label">Who can uss</label>
+                <div class="col-md-9">
+                    <label for="owner_0_@detail.FunctionId">
+                        <input id="owner_0_@detail.FunctionId" type="checkbox" name="Function.Owner" value="0" @(detail.Owner == 0 ? "checked=checked" : "") />
+                        All
+                    </label>
+                    <label for="owner_1_@detail.FunctionId">
+                        <input id="owner_1_@detail.FunctionId" type="checkbox" name="Function.Owner" value="1" @(detail.Owner == 1 ? "checked=checked" : "") />
+                        Backend
+                    </label>
+                    <label for="owner_2_@detail.FunctionId">
+                        <input id="owner_2_@detail.FunctionId" type="checkbox" name="Function.Owner" value="2" @(detail.Owner == 2 ? "checked=checked" : "") />
+                        Front
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-offset-1 col-md-9">
+                    <button type="submit" class="btn btn-primary js_submit"><i class="fa fa-check"></i> Save</button>
+                    <button type="button" class="btn btn-default js_back">back to list</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
+<script type="text/x-jquery-tmpl" id="tmplIconList">
+    {{each IconList}}
+    <li class="js_select_icon" style="height: auto !important">
+        <span class="${$value}" style="font-size:22px;display: block;margin: 5px auto 10px;"></span>
+    </li>
+    {{/each}}
+</script>
+
+<div id="IconModal" class="modal bs-modal-lg" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="取消"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="tab-pane glyphicons-demo">
+                    <ul id="IconList" class="bs-glyphicons bs-glyphicons-list"></ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>

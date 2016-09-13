@@ -1,0 +1,109 @@
+﻿@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+@using System.Data
+@{
+    ViewBag.Title = "功能設定";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    var functions = Model.List.Tables[1];
+
+}
+
+@section PageLevel {
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/jquery-nestable/jquery.nestable.css" />
+}
+
+<div class="note note-info">
+    <h4 class="block">操作提示</h4>
+    <p>
+        拖拉排序之後，記得Reload本頁，才能更新MENU
+    </p>
+    <p>
+        Add、Edit與Del之操作，則不需要Reload
+    </p>
+</div>
+
+@helper CreateRows(DataRow row)
+{
+    var functionId = Convert.ToInt32(row["FunctionId"]);
+    var depth = Convert.ToInt32(row["Depth"]);
+
+    <div class="dd-handle dd3-handle">
+    </div>
+
+    <div class="dd3-content">
+        <div class="col-md-2" id='name_@functionId'><span class="@row["Icon"]"></span> @row["Name"] </div>
+        <div class="col-md-4">@row["Target"]</div>
+        <div class="col-md-2">@row["Parameters"]</div>
+        <div class="col-md-2 form-inline">
+            <button type="button" class="btn btn-xs btn-primary" id="sub_@functionId">Add</button>
+            <button type="button" class="btn btn-xs btn-primary" id="edit_@functionId">Edit</button>
+            <button type="button" class="btn btn-xs btn-danger" id="del_@functionId">Del</button>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 form-inline">
+        <div style="float:right;">
+            <button type="button" class="btn btn-xs btn-primary" id="addCategory">Add Category</button>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="margin-bottom-10" id="nestable_list_menu">
+            <button type="button" class="btn" data-action="expand-all">Expand All</button>
+            <button type="button" class="btn" data-action="collapse-all">Collapse All</button>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="portlet box blue">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-comments"></i>選單
+                </div>
+            </div>
+            <div class="portlet-body ">
+                <div class="dd" id="nestable_list">
+                    <ol class="dd-list">
+                        @{
+                            var li_open = string.Empty;
+                            var li_close = "</li>";
+                            var ol_open = "<ol class=dd-list>";
+                            var ol_close = "</ol>";
+
+                            var lastDepth = 0;
+                            foreach (DataRow row in functions.Rows)
+                            {
+                                var functionId = Convert.ToInt32(row["FunctionId"]);
+                                var depth = Convert.ToInt32(row["Depth"]);
+
+                                li_open = "<li class='dd-item dd3-item' data-id=" + functionId + ">";
+
+                                if (depth > lastDepth)
+                                {
+                                    @Html.Raw(ol_open)
+                                }
+
+                                while (depth < lastDepth)
+                                {
+                                    @Html.Raw(ol_close)
+                                    @Html.Raw(li_close)
+                                    lastDepth--;
+                                }
+                                @Html.Raw(li_close)
+                                @Html.Raw(li_open)
+                                @CreateRows(row)
+                                lastDepth = depth;
+                            }
+                            @Html.Raw(li_close)
+                        }
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

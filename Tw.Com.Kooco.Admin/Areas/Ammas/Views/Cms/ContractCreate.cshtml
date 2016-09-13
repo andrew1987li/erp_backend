@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "ContractCreate";
+}
+<h2>ContractCreate</h2>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+        <script type="text/javascript">
+
+    	var orderid = 0;
+		var ObjectState = "Added";
+
+        var $orderdetailstable = {};
+                $(document).ready(function () {
+
+        $('form').submit(function () {
+            var token = $('[name=__RequestVerificationToken]').val();
+            var serializedForm = $(this).serialize();
+            var actionurl = $(this).attr('action');
+
+                var orderdetails = $orderdetailstable.bootstrapTable('getData');
+
+                var newitem = {
+                                                OrderDetails: orderdetails ,
+
+                        Id: orderid,
+                                                Customer: $('#Customer', 'form').val(),
+                                                ShippingAddress: $('#ShippingAddress', 'form').val(),
+                                                OrderDate: $('#OrderDate', 'form').val(),
+                                        ObjectState:ObjectState
+            };
+            $.ajax({
+                url: actionurl,
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(newitem),
+                success: function (result) {
+                    if (result.success) {
+                        self.location = "/Orders/Index";
+                    } else {
+                        alert(result.err);
+                    }
+
+                },
+                error: function (result) {
+                    console.log(result.statusText + result.responseText);
+                    alert(result.statusText + result.responseText);
+                }
+            });
+            return false;
+
+
+        });
+    });
+    </script>
+
+
+}

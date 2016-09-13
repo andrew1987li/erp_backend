@@ -1,0 +1,129 @@
+﻿@{ViewBag.Title = "請款單編輯";}
+@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+@using System.Data  @*for DataRow,*@
+@using Newtonsoft.Json
+@using Tw.Com.Kooco.Admin.Areas.Ammas.Models.Parameters
+@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    var rtable = Model.List.Tables[0];          //工程類別清單
+    var data = (InvoiceParameter)Model.Data;
+    //var detailType = data.Entity.ConsDetailType; //承包商的工程類別資料
+    var js = $"<script type='text/javascript'>var data = {JsonConvert.SerializeObject(data)};</script>";
+}
+
+@section PageLevel {
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/bootstrap-datepicker/css/datepicker3.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />
+    @*<link rel="stylesheet" type="text/css" href="/Content/global/plugins/select2/select2.css" />
+        <script src="select2.js"></script>
+            <link rel="stylesheet" type="text/css" href="/Content/global/plugins/datatables/extensions/Scroller/css/dataTables.scroller.min.css" />
+            <link rel="stylesheet" type="text/css" href="/Content/global/plugins/datatables/extensions/ColReorder/css/dataTables.colReorder.min.css" />
+            <link rel="stylesheet" type="text/css" href="/Content/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css" />*@
+}
+
+@section FooterScript{@MvcHtmlString.Create(js)}
+
+<div class="notifications bottom-left"></div>
+
+<form>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 form-inline">
+            <span class="h2">@(data.Entity.Id == 0 ? "新增承包商" : "編輯承包商")</span>
+            <div style="float:right;">
+                <button type="button" class="btn btn-default js_print">列印</button> | 
+                <button type="submit" class="btn btn-primary js_submit"><i class="fa fa-check"></i>確認</button> | 
+                <button type="button" class="btn btn-default js_back">取消</button>
+            </div>
+        </div>
+    </div>
+
+    @*<div class="row">
+        <div class="col-md-12 col-sm-12 form-inline">
+            <span class="h2">合約編輯</span>
+            <div style="float:right;">
+                <button type="button" class="btn btn-primary" id="search">列印</button>|
+                <button type="button" class="btn btn-primary" id="reset">取消</button>
+                <button type="button" class="btn btn-primary" id="add">確認</button>
+            </div>
+        </div>
+    </div>*@
+    <label>冠竹土地開發有限公司</label>
+    <label>估驗請款單</label>
+
+    <div style="padding:15px;">
+        <div class="form-group row">
+            <label class="h4">建案名稱</label>
+            <input style="display:block;" type="text" placeholder="請輸入建案名稱" />
+        </div>
+        <div class="form-group row">
+            <label class="h4">廠商名稱</label>
+            <input style="display:block;" type="text" placeholder="請輸入廠商名稱" />
+        </div>
+        <div class="form-group row">
+            <label class="h4">估驗期次</label>
+            <input style="display:block;" type="text" placeholder="請輸入估驗期次" />
+        </div>
+        <div class="form-group row">
+            <label class="h4">工程項目</label>
+            <input style="display:block;" type="text" placeholder="請輸入工程項目" />
+        </div>
+        <div class="form-group row">
+            <label class="h4">契約編號</label>
+            <input style="display:block;" type="text" placeholder="請輸入契約編號" />
+        </div>
+        <div class="form-group row">
+            <label class="h4">估驗期間</label>
+            <input style="display:block;" type="text" placeholder="104/05/01~104/05/30" />
+        </div>
+       
+
+
+
+        <div class="jumbotron">
+            <div class="container">
+                <div class="table-scrollable">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr> <th class="text-center" rowspan="2">項目</th> <th class="text-center" rowspan="2">單位</th> <th class="text-center" rowspan="2">單價</th> <th class="text-center" colspan="2">合約</th><th class="text-center" colspan="2">前期累計完成</th><th class="text-center" colspan="2">本期完成</th><th class="text-center" colspan="2">合計完成</th><th class="text-center" rowspan="2">說明</th>      </tr>
+                            <tr> <th class="text-center">數量</th> <th class="text-center">金額</th> <th class="text-center">數量</th> <th class="text-center">金額</th> <th class="text-center">數量</th> <th class="text-center">金額</th> <th class="text-center">數量</th> <th class="text-center">金額</th>  </tr>
+                        </thead>
+                        <tbody>
+                            <tr> <th scope="row">混泥土</th> <td>100</td> <td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td>100</td><td></td></tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="form-group row">
+            <label class="h4">小計:</label>
+            <label>1154654</label>
+        </div>
+        <div class="form-group row">
+            <label class="h4">合約金額:</label>
+            <label>1154654</label>
+        </div>
+        <div class="form-group row">
+            <label class="h4">前期累計金:</label>
+            <label>1154654</label>
+        </div>
+        <div class="form-group row">
+            <label class="h4">本期金額:</label>
+            <label>1154654</label>
+        </div>
+        <div class="form-group row">
+            <label class="h4">合計請款金:</label>
+            <label>1154654</label>
+        </div>
+
+
+    </div>
+
+</form>
+
+

@@ -1,0 +1,11 @@
+Use.
+Api works for http get and post.
+-Command
+ Send the messages to phone numbers.
+  http://domain/api/msgapi/send?phonenumber=phone1,phone2,phone3&content=msg
+  
+ The api provide the report.
+ 
+-To update the twilio result.
+ In the twilio,
+   set the statuscallback url to http://domain/api/msgapi/updateInfo

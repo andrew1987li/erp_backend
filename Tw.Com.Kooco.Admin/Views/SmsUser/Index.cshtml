@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Tw.Com.Kooco.Admin.Models.Msg.SmsUser>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<h2>列表</h2>
+
+<p>
+    @Html.ActionLink("创造用户", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            名称
+        </th>
+        <th>
+            电子邮件 
+        </th>
+        <th>
+            认证
+        </th>
+        <th>
+            认证密码 
+        </th>
+        <th>
+            状态
+        </th>
+        <th>
+            日期 
+        </th>
+        <th>行动 </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.NAME)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EMAIL)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AUTH)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AUTHKEY)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.STATE)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DATE)
+        </td>
+        <td>
+            @Html.ActionLink("编辑", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("删除", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>

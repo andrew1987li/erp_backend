@@ -1,0 +1,65 @@
+﻿@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+@using Newtonsoft.Json
+@using Tw.Com.Kooco.Admin.Areas.Ammas.Models.Parameters
+@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    var data = (LiteratureParameter)Model.Data;
+    var js = $"<script type='text/javascript'>var data = {JsonConvert.SerializeObject(data)};</script>";
+    var publishDate = (data.Entity.PublishDate == "1900-01-01") ? "" : data.Entity.PublishDate;
+    var link = (string.IsNullOrEmpty(data.Entity.HyperLink)) ? "http://" : data.Entity.HyperLink;
+}
+
+@section PageLevel {
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/bootstrap-datepicker/css/datepicker3.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />
+}
+
+@section FooterScript{@MvcHtmlString.Create(js)}
+
+<div class="notifications bottom-left"></div>
+
+<div class="portlet-body form">
+    <!-- BEGIN FORM-->
+    <form action="#" id="form_1" class="form-horizontal form-bordered form-row-stripped">
+        <input type="hidden" name="Entity.LiteratureId" value="@data.Entity.LiteratureId">
+        <div class="form-body">
+            <div class="form-group required">
+                <label class="col-md-3 control-label">Types Of Cancer</label>
+                <div class="col-md-9">
+                    <input type="text" name="Entity.TypesOfCancer" class="form-control numeric" value="@data.Entity.TypesOfCancer"/>
+                </div>
+            </div>
+
+            <div class="form-group required">
+                <label class="col-md-3 control-label">Publish Date</label>
+                <div class="col-md-9">
+                    <input type="text" id="PublishDate" name="Entity.PublishDate" class="form-control hasDatepicker" value="@publishDate" data-date-format="yyyy-MM-dd">
+                </div>
+              
+            </div>
+
+
+            <div class="form-group required">
+                <label class="col-md-3 control-label">Titel</label>
+                <div class="col-md-9">
+                    <textarea id="Entity.LiteratureTitel" name="Entity.LiteratureTitel" class="form-control" rows="6" placeholder="">@data.Entity.LiteratureTitel</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-3 control-label">Link</label>
+            <div class="col-md-9">
+                <input type="text" name="Entity.HyperLink" class="form-control" value="@link" placeholder="Literature Hyperlink">
+            </div>
+        </div>
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-offset-3 col-md-9">
+                    <button type="submit" class="btn btn-primary js_submit"><i class="fa fa-check"></i> Save</button>
+                    <button type="button" class="btn btn-default js_back">back to list</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>

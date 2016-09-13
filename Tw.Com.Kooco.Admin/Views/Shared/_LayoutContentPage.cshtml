@@ -1,0 +1,63 @@
+﻿@using Tw.Com.Kooco.Admin.Models
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<!-- BEGIN HEAD -->
+<head>
+    <meta charset="utf-8" />
+    <title>BMS For Ammas @WebStatus.Version - @ViewBag.Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+    @RenderSection("HeadMeta", false)
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+    @Styles.Render("~/css/golbal_mandatory")
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN PAGE LEVEL PLUGIN STYLES -->
+    <link href="~/Content/global/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/global/plugins/simple-line-icons/simple-line-icons.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/kooco.css" rel="stylesheet" type="text/css" />
+
+    @RenderSection("PageLevel", false)
+    <!-- END PAGE LEVEL PLUGIN STYLES -->
+    <!-- BEGIN PAGE STYLES -->
+    @Styles.Render("~/css/page_styles")
+    <!-- END PAGE STYLES -->
+    <!-- BEGIN THEME STYLES -->
+    @RenderSection("ThemeStyle", false)
+    @Styles.Render("~/css/theme_styles")
+    <!-- END THEME STYLES -->
+    <link rel="shortcut icon" href="favicon.ico" />
+</head>
+<!-- END HEAD -->
+<!-- BEGIN BODY -->
+
+<body>
+
+    <div class="clearfix">
+    </div>
+
+    <!-- BEGIN CONTENT -->
+
+    <div class="page-content">
+        <!-- BEGIN PAGE CONTENT-->
+        <div class="row">
+            <div class="col-md-12">
+                @RenderBody()
+            </div>
+        </div>
+        <!-- END PAGE CONTENT-->
+    </div>
+
+    <!-- END CONTENT -->
+
+    <script>
+        var __URL_CONTENT = '@Url.Content("~/Content/")';
+    </script>
+    <script src="/Content/kooco/plugins/require/require.min.js" data-main="/Scripts/_appRun" async="async" defer="defer"> </script>
+    @Html.Partial("Modal/ConfirmModal")
+</body>
+<!-- END BODY -->
+</html>

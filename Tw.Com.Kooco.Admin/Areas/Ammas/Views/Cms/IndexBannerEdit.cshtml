@@ -1,0 +1,130 @@
+﻿@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+@using Newtonsoft.Json
+@using Tw.Com.Kooco.Admin.Areas.Ammas.Models.Parameters
+@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    var data = (IndexBannerParameter)Model.Data;
+
+    if (string.IsNullOrEmpty(data.Entity.FirstStringColor)) {
+        data.Entity.FirstStringColor = "#ffffff";
+    }
+    if (string.IsNullOrEmpty(data.Entity.SecondStringColor))
+    {
+        data.Entity.SecondStringColor = "#ffffff";
+    }
+    if (string.IsNullOrEmpty(data.Entity.ThreeStringColor))
+    {
+        data.Entity.ThreeStringColor = "#ffffff";
+    }
+    var js = $"<script type='text/javascript'>var data = {JsonConvert.SerializeObject(data)};</script>";
+
+}
+
+@section PageLevel {
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/bootstrap-datepicker/css/datepicker3.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />
+}
+
+@section FooterScript{@MvcHtmlString.Create(js)}
+
+<div class="notifications bottom-left"></div>
+
+<div class="portlet-body form">
+    <!-- BEGIN FORM-->
+    <form action="#" id="form_1" class="form-horizontal form-bordered form-row-stripped">
+        <input type="hidden" name="Entity.IndexBannerId" value="@data.Entity.IndexBannerId">
+        <div class="form-body">
+            <div class="form-group required">
+                <label class="col-md-3 control-label">FirstString</label>
+                <div class="col-md-9">
+                    <input type="text" id="FirstString" name="Entity.FirstString" class="form-control" value="@data.Entity.FirstString">
+                </div>
+            </div>
+            <div class="form-group required">
+                <label class="col-md-3 control-label">FirstStringColor</label>
+                <div class="col-md-9">
+                    <input type="text" id="FirstStringColor" name="Entity.FirstStringColor" class="form-control" value="@data.Entity.FirstStringColor">
+                </div>
+            </div>
+
+            <div class="form-group required">
+                <label class="col-md-3 control-label">SecondString</label>
+                <div class="col-md-9">
+                    <input type="text" id="SecondString" name="Entity.SecondString" class="form-control" value="@data.Entity.SecondString">
+                </div>
+            </div>
+            <div class="form-group required">
+                <label class="col-md-3 control-label">SecondStringColor</label>
+                <div class="col-md-9">
+                    <input type="text" id="SecondStringColor" name="Entity.SecondStringColor" class="form-control" value="@data.Entity.SecondStringColor">
+                </div>
+            </div>
+
+            <div class="form-group required">
+                <label class="col-md-3 control-label">ThreeString</label>
+                <div class="col-md-9">
+                    <input type="text" id="ThreeString" name="Entity.ThreeString" class="form-control" value="@data.Entity.ThreeString">
+                </div>
+            </div>
+            <div class="form-group required">
+                <label class="col-md-3 control-label">ThreeStringColor</label>
+                <div class="col-md-9">
+                    <input type="text" id="ThreeStringColor" name="Entity.ThreeStringColor" class="form-control" value="@data.Entity.ThreeStringColor">
+                </div>
+            </div>
+
+            <div class="form-group required">
+                <label class="col-md-3 control-label">Align</label>
+                <div class="col-md-9">
+                    <select class="form-control" id="align" name="Entity.Align">
+                        <option value="center" @(data.Entity.Align == "center" ? "selected=selected" : "")>
+                            Center
+                        </option>
+                        <option value="right" @(data.Entity.Align == "right" ? "selected=selected" : "")>
+                            Right
+                        </option>
+                        <option value="left" @(data.Entity.Align == "left" ? "selected=selected" : "")>
+                            Left
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group required">
+                <label class="col-md-3 control-label">Link</label>
+                <div class="col-md-9">
+                    <input type="text" id="Link" name="Entity.Link" class="form-control" value="@data.Entity.Link">
+                </div>
+            </div>
+
+            <div class="form-group required">
+                <label class="col-md-3 control-label">Background Img</label>
+                <div class="col-md-9">
+                    <input type="text" id="img" name="Entity.ImgPath" class="form-control" value="@data.Entity.ImgPath" placeholder="Png or Jpg file">
+                    <span class="btn btn-success fileinput-button" style="padding: 4px 12px;">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        <span>Add files...</span>
+                        <input id="fileupload" type="file" name="file" multiple>
+                    </span>
+                    <br />
+                    <div class="progress progress-striped active" style="width:80%;margin-bottom:3px;">
+                        <div id="progress-bar" class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0;">
+                            <span class="sr-only"></span>
+                        </div>
+                    </div>
+                    <img id="previewImg" src="@data.Entity.ImgPath" alt="" />
+                </div>
+            </div>
+           
+        </div>
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-offset-3 col-md-9">
+                    <button type="submit" class="btn btn-primary js_submit"><i class="fa fa-check"></i> Save</button>
+                    <button type="button" class="btn btn-default js_back">back to list</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>

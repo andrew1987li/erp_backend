@@ -1,0 +1,62 @@
+﻿@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+@using System.Data
+@using Tw.Com.Kooco.Admin.Misc
+@{
+    ViewBag.Title = "權限角色";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    var List = Model.List.Tables[0];
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 form-inline">
+        <div style="float:right;">
+            <a href="/Role/Edit" class="btn btn-primary">新增</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <div class="table-scrollable">
+            <table class="table table-bordered table-hover" id="list">
+                <thead>
+                    <tr>
+                        <th>序號</th>
+                        <th>名稱</th>
+                        <th>描述</th>
+                        <th>停用</th>
+                        <th>建立時間</th>
+                        <th>更新時間</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int index = 1;
+                        foreach (DataRow row in @List.Rows)
+                        {
+                            var ID = row["ID"].ToString();
+                            var _Disable = (Convert.ToBoolean(row["Disable"])) ? "<span style='color:red;font-family: impact;'>是</span>" : "否";
+                            var createTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.Parse(row["CreateTime"].ToString()), jIAnSoft.Framework.Configuration.Section.Get.Common.TimeZone).ToString("yyyy-MM-dd HH:mm:ss");
+                            var updateTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.Parse(row["UpdateTime"].ToString()), jIAnSoft.Framework.Configuration.Section.Get.Common.TimeZone).ToString("yyyy-MM-dd HH:mm:ss");
+
+                            <tr>
+                                <td>@index</td>
+                                <td>@row["Name"]</td>
+                                <td>@row["Description"]</td>
+                                <td>@MvcHtmlString.Create(_Disable)</td>
+                                <td>@createTime</td>
+                                <td>@updateTime</td>
+                                <td class="form-inline">
+                                    <button type="button" class="btn btn-xs btn-primary js_edit" data-id="@ID">編輯</button>
+                                    <button type="button" class="btn btn-xs btn-danger js_del" data-id="@ID">刪除</button>
+                                </td>
+                            </tr>
+                            index++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

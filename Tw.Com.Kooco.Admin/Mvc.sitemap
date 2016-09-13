@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mvcSiteMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0"
+            xsi:schemaLocation="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0 MvcSiteMapSchema.xsd">
+  <mvcSiteMapNode title="首頁" controller="Home" action="Index">
+    <mvcSiteMapNode visibility="SiteMapHelper,SiteMapPathHelper,!*" title="" dynamicNodeProvider="Tw.Com.Kooco.Admin.Models.Menu.DynamicNodeProvider, Tw.Com.Kooco.Admin" />
+    <!--
+    資料庫裡沒有的頁面，需要另外手動建立Node，範例如下
+    第一個節Node要加上 visibility="SiteMapPathHelper,!*"
+    <mvcSiteMapNode title="後台系統" clickable="false" visibility="SiteMapPathHelper,!*">
+      <mvcSiteMapNode title="選單功能設定" controller="Function" action="Index" >
+        <mvcSiteMapNode title="編輯" controller="Function" action="Edit" />
+      </mvcSiteMapNode>
+    </mvcSiteMapNode>
+    -->
+    <!--<mvcSiteMapNode title="後台系統" clickable="false" visibility="SiteMapPathHelper,!*">
+      <mvcSiteMapNode title="選單功能設定" controller="Function" action="Index" >
+        <mvcSiteMapNode title="編輯" controller="Function" action="Edit"  />
+      </mvcSiteMapNode>
+    </mvcSiteMapNode>
+   -->
+  </mvcSiteMapNode>
+
+</mvcSiteMap>

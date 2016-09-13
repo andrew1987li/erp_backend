@@ -1,0 +1,149 @@
+﻿@{ViewBag.Title = "承包商編輯";}
+@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+@using System.Data  @*for DataRow,*@
+@using Newtonsoft.Json
+@using Tw.Com.Kooco.Admin.Areas.Ammas.Models.Parameters
+@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    var rtable = Model.List.Tables[0];          //工程類別清單
+    var data = (ConstructorParameter)Model.Data;
+    var detailType = data.Entity.ConsDetailType; //承包商的工程類別資料
+    var js = $"<script type='text/javascript'>var data = {JsonConvert.SerializeObject(data)};</script>";
+}
+
+@section PageLevel {
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/bootstrap-datepicker/css/datepicker3.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />
+    @*<link rel="stylesheet" type="text/css" href="/Content/global/plugins/select2/select2.css" />
+    <script src="select2.js"></script>
+        <link rel="stylesheet" type="text/css" href="/Content/global/plugins/datatables/extensions/Scroller/css/dataTables.scroller.min.css" />
+        <link rel="stylesheet" type="text/css" href="/Content/global/plugins/datatables/extensions/ColReorder/css/dataTables.colReorder.min.css" />
+        <link rel="stylesheet" type="text/css" href="/Content/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css" />*@
+}
+
+@section FooterScript{@MvcHtmlString.Create(js)}
+
+<div class="notifications bottom-left"></div>
+
+<div class="portlet-body form">
+    <!-- BEGIN FORM-->
+    <form action="#" id="form_1" class="form-horizontal form-bordered form-row-stripped">
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12 form-inline">
+                <span class="h2">@(data.Entity.Id == 0 ? "新增承包商" : "編輯承包商")</span>
+                <div style="float:right;">
+                    <button type="submit" class="btn btn-primary js_submit"><i class="fa fa-check"></i>Save</button> |
+                    <button type="button" class="btn btn-default js_back">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-body">
+            <div class="form-group required">
+                <input type="hidden" id="Id" name="Entity.Id" value="@data.Entity.Id" readonly />
+            </div>
+            <div class="form-group required">
+                <label class="col-md-3 control-label">承包商名稱</label>
+                <div class="col-md-9">
+                    <input type="text" id="Name" name="Entity.Name" class="form-control" placeholder="請輸入承包商名稱" value="@data.Entity.Name" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">電話</label>
+                <div class="col-md-9">
+                    <input type="text" id="Tel" name="Entity.Tel" class="form-control" placeholder="請輸入承包商電話號碼" value="@data.Entity.Tel">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">傳真</label>
+                <div class="col-md-9">
+                    <input type="text" id="Fax" name="Entity.Fax" class="form-control" placeholder="請輸入承包商傳真號碼" value="@data.Entity.Fax">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">統編</label>
+                <div class="col-md-9">
+                    <input type="text" id="TaxId" name="Entity.TaxId" class="form-control" placeholder="請輸入承包商統編" value="@data.Entity.TaxId">
+                </div>
+            </div>
+            @*<div class="form-group">
+                <label class="col-md-3 control-label">承包業務</label>
+                <div class="col-md-9">
+                    <input type="text" id="Duty" name="Entity.Duty" class="form-control" placeholder="請輸入承包商業務" value="@data.Entity.Duty">
+                </div>
+            </div>*@
+            <div class="form-group">
+                <label class="col-md-3 control-label">備註</label>
+                <div class="col-md-9">
+                    <input type="text" id="MEMO" name="Entity.MEMO" class="form-control" placeholder="請輸入備註" value="@data.Entity.MEMO">
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <form action="#" id="form_2" class="form-horizontal form-bordered form-row-stripped">
+        <div><h3>承包商工程項目種類</h3></div>
+        <div class="container form-group col-md-9">
+            <div class="form-group col-md-4 row">
+                @{
+                    foreach (DataRow row in detailType.Tables[0].Rows)
+                    {
+                        <button type="button" class="btn btn-primary">@row["Name"]  <i class="btn-danger fa fa-remove btn-large"></i></button>
+                    }
+                }
+            </div>
+            <div class="col-md-4 form-group">
+                <select class="form-control col-md-4" id="selectType">
+                    <optgroup label="工程項目清單">
+                        @{foreach (DataRow row in rtable.Rows)
+                            {
+                                <option value="@row["Id"]">@row["Name"]</option>
+                            }
+                        }
+                    </optgroup>
+                </select>
+                <button type="button" id="btn_addType" name="btn_addType" class="btn btn-primary"><i class="fa fa-plus-circle btn-large"></i>  Add</button>
+            </div>
+        </div>
+
+
+        @*<div class="master">
+        </div>
+        <div class="details">
+            <h4>Detail Items</h4>
+            <table style="width:100%">
+                <tr>
+                    <td>Item Name</td>
+                    <td>Qty.</td>
+                    <td>Rate</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="text" id="ItemName" />
+                        <span class="error">Item name required</span>
+                    </td>
+                    <td>
+                        <input type="text" id="Qty" />
+                        <span class="error">valid quantity required</span>
+                    </td>
+                    <td>
+                        <input type="text" id="Rate" />
+                        <span class="error">valid rate required</span>
+                    </td>
+                    <td>
+                        <input type="button" id="add" value="add" />
+                    </td>
+                </tr>
+            </table>
+            <div id="orderitems" class="tablecontainer">
+            </div>
+            <div style="padding:10px 0px;" text-align="right">
+                <input id=submit type="button" value="save" style="padding:10px 20px" />
+            </div>
+        </div>*@
+    </form>
+
+    <form action="#" id="form_3" class="form-horizontal form-bordered form-row-stripped"></form>
+</div>

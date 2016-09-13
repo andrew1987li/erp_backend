@@ -1,0 +1,78 @@
+﻿@model IList<Tw.Com.Kooco.Admin.Models.Msg.Reports>
+@using Tw.Com.Kooco.Admin.Models.Msg
+
+@{
+    ViewBag.Title = "Report";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    int index = 0;
+
+    string str = ViewBag.Month + " 月";
+}
+
+<h2> 报告 </h2>
+
+<h3>@ViewBag.Year 年 @if (ViewBag.type != "year") { @str } 使用</h3>
+
+@{ 
+    List<SelectListItem> sel_list = new List<SelectListItem>();
+    int nyear = Convert.ToInt32(ViewBag.Year);
+    for (int i=2015; i<2020; i++)
+    {
+        SelectListItem item = new SelectListItem();
+
+        if (nyear != i) { item.Selected = false; }
+        else { item.Selected = true; }
+
+        item.Text = i.ToString();
+        item.Value = i.ToString();
+        sel_list.Add(item);
+    }
+
+}
+<script src="~/Scripts/App/Msg/send.js"></script>
+
+@using (Html.BeginForm("Report", "Msg", FormMethod.Post, new { id = "formyear" }))
+{
+    if (ViewBag.Type == "year")
+    { @Html.DropDownList("thisyear", sel_list, new { onchange = "changeevent()" })}
+
+}
+
+
+<div class="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>类别</th>
+                <th>使用</th>
+                <th>行动</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Reports result in Model)
+            {
+                index++;
+                <tr>
+                    <th scope="row">@index</th>
+                    <td>@result.key</td>
+                    <td>@result.value</td>
+                    <td>@if (ViewBag.type == "year")
+                    { @Html.ActionLink("每周的", "Report", new { type = "month", year = @nyear, month = @index })  } |@if (ViewBag.type == "year") {@Html.ActionLink("每日的 ", "Report", new { type = "day", year = @nyear, month = @index })}
+                    
+                    @if (ViewBag.type == "month") {@Html.ActionLink("每日的 ", "Report", new { type = "day", year = @nyear, month =@ViewBag.Month }) }
+                   @if (ViewBag.type == "day")
+                        {@Html.ActionLink("详细信息", "Report", new { type = "detail", year = @nyear, month = @ViewBag.Month, day= @result.days+1 }) }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @if (ViewBag.type == "month")
+    { @Html.ActionLink("以前的", "Report", new { type = "year", year = @nyear})  } 
+    @if (ViewBag.type == "day")
+    { @Html.ActionLink("以前的", "Report", new { type = "month", year = @nyear, month= @ViewBag.Month })  }
+    
+</div>
+
+

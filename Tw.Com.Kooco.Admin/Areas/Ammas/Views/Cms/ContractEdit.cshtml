@@ -1,0 +1,245 @@
+﻿@{ViewBag.Title = "合約編輯";}
+@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+@using System.Data  @*for DataRow,*@
+@using Newtonsoft.Json
+@using Tw.Com.Kooco.Admin.Areas.Ammas.Models.Parameters
+@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    var data = (ContractParameter)Model.Data;
+    var detailtable = data.Entity.ContractDetail;       //此合約的所有工程項目細項
+    var constructionList = data.Entity.ConsDetailType; //建案中的所用到的工程項目
+    var StartDate = ((data.Entity.ContractDate == "1900-01-01") || (data.Entity.ContractDate == "01-01-1900")) ? "" : data.Entity.ContractDate;
+    var js = $"<script type='text/javascript'>var data = {JsonConvert.SerializeObject(data)};</script>";
+}
+
+@section PageLevel {
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/bootstrap-datepicker/css/datepicker3.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />
+    @*<link rel="stylesheet" type="text/css" href="/Content/global/plugins/select2/select2.css" />
+        <script src="select2.js"></script>
+            <link rel="stylesheet" type="text/css" href="/Content/global/plugins/datatables/extensions/Scroller/css/dataTables.scroller.min.css" />
+            <link rel="stylesheet" type="text/css" href="/Content/global/plugins/datatables/extensions/ColReorder/css/dataTables.colReorder.min.css" />
+            <link rel="stylesheet" type="text/css" href="/Content/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css" />*@
+}
+
+@section FooterScript{
+    @MvcHtmlString.Create(js);
+    <script type="text/javascript">
+        var $orderstable = $('#orders-table');
+
+        //明細表按鈕(動態產生)
+        function actionFormatter(value, row, index) {
+            return [
+                '<a class="edit" href="javascript:void(0)" title="Add">',
+                '<i class="glyphicon glyphicon-edit"></i>',
+                '</a>  ',
+                ' <a class="remove" href="javascript:void(0)" title="Remove">',
+                '<i class="glyphicon glyphicon-remove"></i>',
+                '</a>'
+            ].join('');
+        }
+        window.actionEvents = {
+            'click .edit': function (e, value, row, index) {
+                var url = "/Orders/Edit/" + row.Id
+                $(location).attr('href', url);
+            },
+            'click .remove': function (e, value, row, index) {
+                deleteOrders(row.Id);
+                //console.log(value, row, index);
+            }
+        }
+
+        //jquery post /Orders/Delete/:id
+        function deleteOrders(id) {
+            var url = '@Url.Action("Delete")';
+            bootbox.dialog({
+                message: "Are you sure delete " + id,
+                title: "Delete Orders ",
+                buttons: {
+                    Cancel: {
+                        label: "Cancel",
+                        className: "btn-default",
+                        callback: function () {
+
+                        }
+                    },
+                    OK: {
+                        label: "OK",
+                        className: "btn-success",
+                        callback: function () {
+                            $.post(url, { id: id }, function (data) {
+                                $orderstable.bootstrapTable('remove', { field: 'Id', values: [id] });
+                                //console.log('remove' + row.Id);
+                            });
+                        }
+                    }
+                }
+            });
+        }
+        $(document).ready(function (e) {
+            $orderstable = $('#orders-table').bootstrapTable(
+                {
+                }
+                );
+            $orderstable.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+                $deleteordersbutton.prop('disabled', !$orderstable.bootstrapTable('getSelections').length);
+            });
+            $('#newordersbutton').on('click', function () {
+
+                $(location).attr('href', "/Ammas/Cms/ContractList");
+            });
+            $('#deleteordersbutton').on('click', function () {
+                var selected = $orderstable.bootstrapTable('getSelections');
+                if (selected.length > 0) {
+                    deleteOrders(selected[0].Id);
+                }
+
+            });
+        });
+    </script>
+}
+
+<div class="notifications bottom-left"></div>
+
+<div class="portlet-body form">
+    <!-- BEGIN FORM-->
+    <form action="#" id="form_1" class="form-horizontal form-bordered form-row-stripped">
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12 form-inline">
+                <span class="h2">@(data.Entity.Id == 0 ? "新增合約" : "編輯合約")</span>
+                <div style="float:right;">
+                    <button type="submit" class="btn btn-primary js_submit"><i class="fa fa-check"></i>Save</button> |
+                    <button type="button" class="btn btn-default js_back">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+<div class="form-body">
+    <div class="form-group required">
+        <input type="hidden" id="Id" name="Entity.Id" value="@data.Entity.Id" readonly />
+    </div>
+    <div class="form-group required">
+        <label class="col-md-3 control-label">建案名稱</label>
+        <div class="col-md-9 required">
+            <input type="text" id="CaseName" name="Entity.CaseName" class="form-control" placeholder="請選擇建商名稱" value="@data.Entity.CaseName" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label required">承包商名稱</label>
+        <div class="col-md-9">
+            <input type="text" id="ConstructorName" name="Entity.ConstructorName" class="form-control" placeholder="請選擇承包商名稱" value="@data.Entity.ConstructorName">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label required">工程項目</label>
+        <div class="col-md-9">
+            <select class="form-control col-md-4" id="selectType" value="@data.Entity.ConstructionTypeId">
+                <optgroup label="工程項目清單">
+                    @{
+                        if (@constructionList != null)
+                        {
+                            foreach (DataRow row in constructionList.Tables[0].Rows)
+                            {
+                                <option value="@row["Id"]">@row["Name"]</option>
+                            }
+                        }
+                    }
+                </optgroup>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label required">聯絡人</label>
+        <div class="col-md-9">
+            <input type="text" id="ContactPerson" name="Entity.ContactPerson" class="form-control" placeholder="請輸入聯絡人姓名" value="@data.Entity.ContactPerson">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">立約日期</label>
+        <div class="col-md-9">
+            <input type="date" id="ContractDate" name="Entity.ContractDate" class="form-control hasDatepicker" value="@data.Entity.ContractDate" data-date-format="yyyy-MM-dd">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">備註</label>
+        <div class="col-md-9">
+            <input type="text" id="MEMO" name="Entity.MEMO" class="form-control" placeholder="請輸入備註" value="@data.Entity.MEMO">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">保留款</label>
+        <div class="col-md-9">
+            <input type="text" id="RetentionMoney" name="Entity.RetentionMoney" class="form-control" placeholder="請輸入保留款" value="@data.Entity.RetentionMoney">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">特殊保留款</label>
+        <div class="col-md-9">
+            <input type="text" id="SpecialRetention" name="Entity.SpecialRetention" class="form-control" placeholder="請輸入特殊保留款" value="@data.Entity.SpecialRetention">
+        </div>
+    </div>
+</div>
+    </form>
+
+<form action="#" id="form_2" class="form-horizontal form-bordered form-row-stripped">
+    <div class="col-md-12 col-sm-12 form-inline">
+        <div class="col-md-9">
+            <button type="button" id="btn_addItem" name="btn_addItem" class="btn btn-primary"><i class="fa fa-plus-circle btn-large"></i>  Add</button>
+        </div>
+        <div class="table-scrollable">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>工程項目細項</th>
+                        <th>單價</th>
+                        <th>單位</th>
+                        <th>數量</th>
+                        <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @{
+                            foreach (DataRow row in detailtable.Tables[0].Rows)
+                            {
+                                <td>@row["ConstructionItem"]</td>
+                                    <td>@row["Price"]</td>
+                                    <td>@row["Unit"]</td>
+                                    <td>@row["Qty"]</td>
+                            }
+                        }
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @*<div><h3>承包商工程項目種類</h3></div>
+        <div class="container form-group col-md-4">
+            <div class="row">
+                @{
+                    foreach (DataRow row in detailType.Tables[0].Rows)
+                    {
+                        <button type="button" class="btn btn-primary">@row["Name"]  <i class="btn-danger fa fa-remove btn-md"></i></button>
+                    }
+                }
+            </div>
+        </div>
+        <div class="col-md-4 form-group">
+            <select id="selectType">
+                <optgroup label="工程項目清單">
+                    @{foreach (DataRow row in rtable.Rows)
+                        {
+                            <option value="@row["Id"]">@row["Name"]</option>
+                        }
+                    }
+                </optgroup>
+            </select>
+            <button type="button" id="btn_addType" name="btn_addType" class="btn btn-primary"><i class="fa fa-plus-circle"></i>  Add</button>
+        </div>*@
+</form>
+
+<form action="#" id="form_3" class="form-horizontal form-bordered form-row-stripped"></form>
+</div>
+
+

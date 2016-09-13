@@ -1,0 +1,122 @@
+﻿@using System.Data
+@using Newtonsoft.Json
+@using Tw.Com.Kooco.Admin.Models.Parameters
+@using Tw.Com.Kooco.Admin.Providers
+@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+@{
+    ViewBag.Title = "編輯";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+
+    var param = (UserParameter)Model.Data;
+    var UserID = Convert.ToInt64(param.User.IdentityKey);
+
+    var js = string.Format("<script type='text/javascript'>var data={0};</script>", JsonConvert.SerializeObject(param.User));
+
+    List<string> UserRole = new List<string>();
+
+    DataSet ds = DataAccessProvider.User.GetUserRole(UserID);
+
+    var roleTable = ds.Tables[0];
+
+    if (ds.Tables.Count > 1)
+    {
+        DataTable UserRoleTable = ds.Tables[1];
+        foreach (DataRow r in UserRoleTable.Rows)
+        {
+            UserRole.Add(r["RoleID"].ToString());
+        }
+    }
+
+}
+@section FooterScript{@MvcHtmlString.Create(js)}
+
+<div class="portlet-body form">
+    <!-- BEGIN FORM-->
+    <form action="#" id="form_1" class="form-horizontal form-bordered form-row-stripped">
+        <div class="form-body">
+            <div class="form-group ">
+                <label class="col-md-3 control-label">帳號</label>
+                <div class="col-md-9" id="nameGroup">
+                    <input type="text" id="account" class='form-control' disabled>
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label class="col-md-3 control-label">密碼</label>
+                <div class="col-md-9" id="pwGroup">
+                    <input type="password" maxlength="32" id="pw" class='form-control'>
+                </div>
+            </div>
+
+            <div class="form-group ">
+                <label class="col-md-3 control-label">名</label>
+                <div class="col-md-9" id="firstNameGroup">
+                    <input type="text" id="firstName" class='form-control'>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-md-3 control-label">姓</label>
+                <div class="col-md-9" id="lastNameGroup">
+                    <input type="text" id="lastName" class='form-control'>
+                </div>
+            </div>
+            <div class="form-group ">
+                <label class="col-md-3 control-label">狀態</label>
+                <div class="col-md-9" id="statusGroup">
+                    <label for="status1">
+                        <input id="status1" type="radio" name="status" value="1" />
+                        正常
+                    </label>
+                    <label for="status2">
+                        <input id="status2" type="radio" name="status" value="2" />
+                        暫停
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">角色</label>
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-primary js_all_on">全開</button>
+                    <button type="button" class="btn btn-default js_all_off">全關</button>
+                    <div class="table-scrollable">
+                        <table class="table table-bordered table-hover" id="list">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-1">加入</th>
+                                    <th class="col-md-1">名稱</th>
+                                    <th class="col-md-1">描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    foreach (DataRow row in roleTable.Rows)
+                                    {
+                                        var RoleID = row["ID"].ToString();
+                                        string Checked = (UserRole.Contains(RoleID)) ? "checked" : "";
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" class="make-switch" name="RoleIDs" @Checked value="@RoleID">
+                                            </td>
+                                            <td>@row["Name"]</td>
+                                            <td>@row["Description"]</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-offset-3 col-md-9">
+                    <button type="submit" class="btn btn-primary js_submit"><i class="fa fa-check"></i> Save</button>
+                    <button type="button" class="btn btn-default js_back">back to list</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>

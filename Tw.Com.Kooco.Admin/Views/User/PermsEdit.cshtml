@@ -1,0 +1,90 @@
+﻿@using System.Collections
+@using System.Data
+@using Newtonsoft.Json
+@using Tw.Com.Kooco.Admin.Misc.Definition
+@using Tw.Com.Kooco.Admin.Models.Parameters
+@using Tw.Com.Kooco.Admin.Providers
+@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    var detail = ((UserParameter)Model.Data).User;
+    var js = string.Format("<script type='text/javascript'>var data={0};</script>", JsonConvert.SerializeObject(new { detail.IdentityKey, detail.Functions, detail.Operations }));
+    var ds = DataAccessProvider.Function.List();
+    var functions = ds.Tables[1];
+    //var functionCount = functions.Rows.Count;
+}
+@section FooterScript{@MvcHtmlString.Create(js)}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <div class="portlet purple box">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i>Account : @detail.Account
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="table-scrollable">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th width="250">Function name</th>
+                                @*<th>Path</th>*@
+                                <th>Permission</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                foreach (DataRow row in functions.Rows)
+                                {
+                                    string title = row["Name"].ToString();
+                                    if (title.StartsWith("@") || title.StartsWith("XX"))
+                                    {
+                                        continue;
+                                    }
+
+                                    var functionId = Convert.ToInt32(row["FunctionId"]);
+                                    var depth = Convert.ToInt32(row["Depth"]);
+                                    var paddingLeft = string.Format("padding-left: {0}px;", depth * 15 + 2);
+                                    <tr>
+                                        <td style='@paddingLeft'>
+                                            <span id='name_@functionId'>
+                                                @if (depth > 0)
+                                                {
+                                                    <i class="fa fa-chevron-circle-right" style="color:#FF5E5E;"></i>@:&nbsp;&nbsp;
+                                         }
+                                                @row["Name"]
+                                            </span>
+                                        </td>
+                                        @*<td style='padding-right: 0;padding-left: 0;'>
+                                                @foreach (DictionaryEntry obj in Permission.Data)
+                                                {
+                                                    <input id='perms_@row["FunctionId"]_@obj.Key' class="disabled" type="checkbox" name='perms_@row["FunctionId"]' value="@obj.Key" disabled="disabled" />
+                                                    <label for='perms_@row["FunctionId"]_@obj.Key' class="disabled">@obj.Value</label>
+                                                }
+                                            </td>*@
+                                        <td>
+                                            <input id="allow_@row["FunctionId"]_1" type="radio" name="allow_@row["FunctionId"]" value="@row["FunctionId"]" />
+                                            <label for="allow_@row["FunctionId"]_1">Allow</label>
+                                            <input id="allow_@row["FunctionId"]_0" type="radio" name="allow_@row["FunctionId"]" value="0" checked="checked" />
+                                            <label for="allow_@row["FunctionId"]_0">Deny</label>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="form-actions">
+                    <div class="row">
+                        <div class="col-md-offset-3 col-md-9">
+                            <button type="submit" class="btn btn-primary js_submit"><i class="fa fa-check"></i> Save</button>
+                            <button type="button" class="btn btn-default js_back">back to list</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

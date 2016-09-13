@@ -1,0 +1,148 @@
+﻿@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+@using jIAnSoft.Framework.Configuration
+@using Newtonsoft.Json
+@using Tw.Com.Kooco.Admin.Areas.Ammas.Models.Parameters
+@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    var data = (VideoNewsParameter)Model.Data;
+    var js = $"<script type='text/javascript'>var data = {JsonConvert.SerializeObject(new { data.VideoNews.VideoNewsId, EndDate = data.VideoNews.EndDate.ToString("yyyy-MM-dd HH:mm:ss"), data.VideoNews.Status, data.VideoNews.IsTop, data.VideoNews.Type, ParamKeyWord = data.KeyWord, VideoNews = data.VideoNewsType, ParamStartDate = data.StartDate, ParamEndDate = data.EndDate, TextBody = data.VideoNews.TextBody ?? "" })};</script>";
+
+    data.VideoNews.StartDate = TimeZoneInfo.ConvertTimeFromUtc(data.VideoNews.StartDate, Section.Get.Common.TimeZone);
+    data.VideoNews.EndDate = TimeZoneInfo.ConvertTimeFromUtc(data.VideoNews.EndDate, Section.Get.Common.TimeZone);
+    var sDate = data.VideoNews.StartDate.Year.Equals(9999) || data.VideoNews.StartDate.Year.Equals(1) ? "" : data.VideoNews.StartDate.ToString("yyyy-MM-dd HH:mm");
+    var eDate = data.VideoNews.EndDate.Year.Equals(9999) || data.VideoNews.EndDate.Year.Equals(1) ? "" : data.VideoNews.EndDate.ToString("yyyy-MM-dd HH:mm");
+}
+
+@section PageLevel {
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/bootstrap-datepicker/css/datepicker3.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />
+}
+
+@section FooterScript{@MvcHtmlString.Create(js)}
+
+<div class="notifications bottom-left"></div>
+
+<div class="portlet-body form">
+    <!-- BEGIN FORM-->
+    <form action="#" id="form_1" class="form-horizontal form-bordered form-row-stripped">
+        <input type="hidden" name="VideoNews.VideoNewsId" value="@data.VideoNews.VideoNewsId">
+        <div class="form-body">
+            <div class="form-group required">
+                <label class="col-md-3 control-label">Sort</label>
+                <div class="col-md-9">
+                    <input type="text" name="VideoNews.Sort" class="form-control numeric" value="@data.VideoNews.Sort">
+                </div>
+            </div>
+            <div class="form-group required">
+                <label class="col-md-3 control-label">Type</label>
+                <div class="col-md-2">
+                    <select class="form-control" id="VideoNewsType" name="VideoNews.Type">
+
+                        <option value="3" @(data.VideoNews.Type == 3 ? "selected=selected" : "")>
+                            新聞
+                        </option>
+
+                    </select>
+                </div>
+            </div>
+            <div class="form-group required">
+                <label class="col-md-3 control-label">Title</label>
+                <div class="col-md-9">
+                    <input type="text" name="VideoNews.Title" class="form-control" value="@data.VideoNews.Title">
+                </div>
+            </div>
+
+            <div class="form-group required">
+                <label class="col-md-3 control-label">Start</label>
+                <div class="col-md-2">
+                    <div class="input-group date form_datetime">
+                        <input type="text" name="VideoNews.StartDate" class="form-control" value="@sDate">
+                        <span class="input-group-btn">
+                            <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">End</label>
+                <div class="col-md-2">
+                    <div class="input-group date form_datetime">
+                        <input type="text" name="VideoNews.EndDate" class="js_eDate form-control" value="@eDate">
+                        <span class="input-group-btn">
+                            <button class="btn default date-set" type="button"><i class="fa fa-calendar"></i></button>
+                        </span>
+                    </div>
+                    <label for="forever">
+                        <input type="checkbox" name="Forever" value="true" id="forever" class="js_forever" style="position:static;margin-left:10px;" @(eDate == "" ? "checked=checked" : "")>
+                        Forever
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">IsTop</label>
+                <div class="col-md-9">
+                    <label for="isTopYes">
+                        <input type="radio" id="isTopYes" value="true" name="VideoNews.IsTop" @(data.VideoNews.IsTop ? "checked=checked" : "")>
+                        Yes
+                    </label>
+                    <label for="isTopNo">
+                        <input type="radio" id="isTopNo" value="false" name="VideoNews.IsTop" @(!data.VideoNews.IsTop ? "checked=checked" : "")>
+                        No
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Status</label>
+                <div class="col-md-9">
+                    <label for="statusYes">
+                        <input type="radio" id="statusYes" value="1" name="VideoNews.Status" @(data.VideoNews.Status == 1 ? "checked=checked" : "") />
+                        Show
+                    </label>
+                    <label for="statusNo">
+                        <input type="radio" id="statusNo" value="0" name="VideoNews.Status" @(data.VideoNews.Status == 0 ? "checked=checked" : "") />
+                        No Show
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Link(Youtube Embed Url Only)</label>
+                <div class="col-md-9">
+                    <input type="text" name="VideoNews.Link" class="form-control" value="@data.VideoNews.Link" placeholder="Video News Hyperlink">
+                </div>
+            </div>
+            @*<div class="form-group required">
+                <label class="col-md-3 control-label">News Img</label>
+                <div class="col-md-9">
+                    <input type="text" id="img" name="VideoNews.ImgPath" class="form-control" value="@data.VideoNews.ImgPath" placeholder="AssetBundle file">
+                    <span class="btn btn-success fileinput-button" style="padding: 4px 12px;">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        <span>Add files...</span>
+                        <input id="fileupload" type="file" name="file" multiple>
+                    </span>
+                    <br />
+                    <div class="progress progress-striped active" style="width:80%;margin-bottom:3px;">
+                        <div id='progress-bar' class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0;">
+                            <span class="sr-only"></span>
+                        </div>
+                    </div>
+                    <img id="previewImg" src="@data.VideoNews.ImgPath" alt="" />
+                </div>
+            </div>*@
+            @*<div class="form-group required">
+                <label class="col-md-3 control-label">Text Body</label>
+                <div class="col-md-9">
+                    <textarea id="VideoNews.TextBody" name="VideoNews.TextBody" class="form-control" rows="6" placeholder="">@data.VideoNews.TextBody</textarea>
+                </div>
+            </div>*@
+        </div>
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-offset-3 col-md-9">
+                    <button type="submit" class="btn btn-primary js_submit"><i class="fa fa-check"></i> Save</button>
+                    <button type="button" class="btn btn-default js_back">back to list</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>

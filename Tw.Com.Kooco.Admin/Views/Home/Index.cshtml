@@ -1,0 +1,122 @@
+﻿@using jIAnSoft.Framework.Configuration
+@using Tw.Com.Kooco.Admin.Misc
+@using Tw.Com.Kooco.Admin.Providers
+@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+
+    var yesterday = UtilityHelper.UtcToTimeZone(DateTime.UtcNow).AddDays(-1).ToString("yyyy-MM-dd");
+    //var mobageUniquePlayer = DataAccessProvider.PingBall.Statistics.UniquePlayer(new StatisticsParameter { StartDate = yesterday });
+    //var mobage = DataAccessProvider.PingBall.Statistics.Dashboard(new StatisticsParameter { StartDate = yesterday });
+    //var mobageUniquePlayer = Convert.ToInt32(mobage.Rows[0]["UniquePlayer"]);
+    //var mobageRegisterPlayer = Convert.ToInt32(mobage.Rows[0]["RegisterPlayer"]);
+    //var mobageGross = Convert.ToDecimal(mobage.Rows[0]["Gross"]);
+    //var mobagePlaytime = Convert.ToDecimal(mobage.Rows[0]["Playtime"]);
+    //var mobagePaymentPlayerCount = Convert.ToInt32(mobage.Rows[0]["PaymentPlayerCount"]);
+    //var mobagePayRate = (mobageUniquePlayer == 0 || mobagePaymentPlayerCount == 0) ? 0 : mobagePaymentPlayerCount / (float)mobageUniquePlayer;
+    //var mobageArppu = (mobageGross == 0 || mobagePaymentPlayerCount == 0) ? 0 : mobageGross / mobagePaymentPlayerCount;
+
+    //var mobageAveragePlaytime = (mobagePlaytime == 0 || mobageUniquePlayer == 0) ? 0 : mobagePlaytime / mobageUniquePlayer;
+    //var mobageTime = new TimeSpan(0, Convert.ToInt32(mobageAveragePlaytime), 0);
+    //var mixi = DataAccessProvider.PingBall.Statistics.Dashboard(new StatisticsParameter { StartDate = yesterday, PlatformId = 3 });
+    //var mixiUniquePlayer = Convert.ToInt32(mixi.Rows[0]["UniquePlayer"]);
+    //var mixiRegisterPlayer = Convert.ToInt32(mixi.Rows[0]["RegisterPlayer"]);
+    //var mixiGross = Convert.ToDecimal(mixi.Rows[0]["Gross"]);
+    //var mixiPlaytime = Convert.ToDecimal(mixi.Rows[0]["Playtime"]);
+    //var mixiPaymentPlayerCount = Convert.ToInt32(mixi.Rows[0]["PaymentPlayerCount"]);
+    //var mixiPayRate = (mixiUniquePlayer == 0 || mixiPaymentPlayerCount == 0) ? 0 : mixiPaymentPlayerCount / (float)mixiUniquePlayer;
+    //var mixiArppu = (mixiGross == 0 || mixiPaymentPlayerCount == 0) ? 0 : mixiGross / mixiPaymentPlayerCount;
+    //var mixiAveragePlaytime = (mixiPlaytime == 0 || mixiUniquePlayer == 0) ? 0 : mixiPlaytime / mixiUniquePlayer;
+
+    //var mixiTime = new TimeSpan(0, Convert.ToInt32(mixiAveragePlaytime), 0);
+
+}
+
+<div class="row">
+    <div class="col-md-6 col-sm-6">
+        <div id="dashboard-report-range" class="pull-left tooltips btn btn-fit-height grey-salt" data-placement="top" @*data-original-title="Change dashboard date range"*@>
+            <i class="icon-calendar"></i>&nbsp;
+            <span class="thin uppercase visible-lg-inline-block">Yesterday's Record - @yesterday&nbsp;</span>&nbsp;
+            @*<i class="fa fa-angle-down"></i>*@
+        </div>
+    </div>
+</div>
+<div class="clearfix">
+</div>
+<!-- BEGIN DASHBOARD STATS -->
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat blue-madison">
+            <div class="visual">
+                <i class="icon-user-follow"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    @*@mobageRegisterPlayer*@
+                </div>
+                <div class="desc">
+                
+                </div>
+            </div>
+            <a class="more" href="#">
+                View more <i class="m-icon-swapright m-icon-white"></i>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat red-intense">
+            <div class="visual">
+                <i class="icon-users"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    
+                </div>
+                <div class="desc">
+                    
+                </div>
+            </div>
+            <a class="more" href="#">
+                View more <i class="m-icon-swapright m-icon-white"></i>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat green-haze">
+            <div class="visual">
+                <i class="fa fa-dollar"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    @*@String.Format("{0,4:P2}", mobagePayRate)*@
+                </div>
+                <div class="desc">
+                   
+                </div>
+            </div>
+            <a class="more" href="#">
+                View more <i class="m-icon-swapright m-icon-white"></i>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat purple-plum">
+            <div class="visual">
+                <i class="fa fa-bar-chart-o"></i>
+            </div>
+            <div class="details">
+                <div class="number">
+                    @*@mobageArppu.ToString("#,##;(#,##)").PadLeft(1, '0')*@
+                </div>
+                <div class="desc">
+                  
+                </div>
+            </div>
+            <a class="more" href="#">
+                View more <i class="m-icon-swapright m-icon-white"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<!-- END DASHBOARD STATS -->

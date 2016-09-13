@@ -1,0 +1,62 @@
+﻿@using jIAnSoft.Framework.Configuration
+@using Tw.Com.Kooco.Admin.Entitys
+@using Tw.Com.Kooco.Admin.Models
+@using Tw.Com.Kooco.Admin.Models.Parameters
+@using Tw.Com.Kooco.Admin.Providers
+@using Tw.Com.Kooco.Admin.Providers.Authenticator
+@{
+    var function = DataAccessProvider.Function.List(new FunctionParameter { Function = new Function { Owner = 1 } }).Tables[1];
+    var functionTree = FunctionModel.GenTree(function);
+    var user = ((ManagerIdentity)AuthenticatorProvider.GetUser().Identity).CurrentUser;
+    var enumerable = functionTree as Function[] ?? functionTree.ToArray();
+}
+
+@helper  CreateMenu(IEnumerable<Function> list, User user, int dep)
+{
+    var i = 0;
+    foreach (var item in list)
+    {
+        if (user.OwnFunction.Contains(item.FunctionId) || user.IsAdministrator)
+        {
+
+            var target = string.Format("{0}{1}", @item.Target, (!item.Parameters.Trim().Equals("") ? string.Format("?{0}", item.Parameters) : ""));
+
+            string li_class = (i < list.Count() - 1 || dep > 1) ? null : "last";
+
+            <li class="@li_class">
+                <a href="@target">
+                    <i class="@item.Icon"></i>
+                    <span class="title">@item.Name</span>
+                    @if (item.Son.Count > 0)
+                    {
+                        <span class="arrow "></span>
+                    }
+                </a>
+                @if (item.Son.Count > 0)
+                {
+                    <ul class="sub-menu">
+                        @CreateMenu(item.Son.Values, user, dep + 1)
+                    </ul>
+                }
+            </li>
+        }
+        i++;
+    }
+}
+
+<ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+    <li class="sidebar-toggler-wrapper">
+        <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+        <div class="sidebar-toggler">
+        </div>
+        <!-- END SIDEBAR TOGGLER BUTTON -->
+    </li>
+    <li class="start">
+        <a href="~/">
+            <i class="icon-home"></i>
+            <span class="title">Dashboard</span>
+            <span class="selected"></span>
+        </a>
+    </li>
+    @CreateMenu(enumerable.Where(row => user.OwnFunction.Contains(row.FunctionId) || user.IsAdministrator), user, 1);
+</ul>

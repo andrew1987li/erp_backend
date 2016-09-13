@@ -1,0 +1,75 @@
+﻿@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+@using System.Data
+@using Tw.Com.Kooco.Admin.Misc
+@{
+    ViewBag.Title = "管理帳號清單";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    var users = Model.List.Tables[1];
+    var userCount = Convert.ToInt32(Model.List.Tables[0].Rows[0][0]);
+    //var js = string.Format("<script type='text/javascript'>var ok = {0};</script>", @Model.Ok.ToString().ToLower());
+    //@section FooterScript{@MvcHtmlString.Create(@js)}
+}
+@helper Status(string status)
+{
+    switch (status)
+    {
+        case "1":
+            @:Normal
+            break;
+        case "2":
+        @:Stop
+            break;
+    }
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 form-inline">
+        <div style="float:right;">
+            <input type="text" class="form-control" style="width: 160px;" maxlength="64" placeholder="Keyword" value='@Model.KeyWord' id='kw' />
+            <button type="button" class="btn btn-primary" id="search">Search</button>
+            <button type="button" class="btn btn-primary" id="reset">Reset</button>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <div class="table-scrollable">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>序號</th>
+                        <th>帳號</th>
+                        <th>名稱</th>
+                        <th>狀態</th>
+                        @*<th>角色</th>
+                            <th>特殊權限數量</th>*@
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        foreach (DataRow row in users.Rows)
+                        {
+                            var userId = Convert.ToInt32(row["UserId"]);
+                            <tr>
+                                <td>@row["Serial"]</td>
+                                <td>@row["Account"]</td>
+                                <td id='name_@userId'>@row["FirstName"] @row["LastName"]</td>
+                                <td id='status_@userId'>@Status(@row["Status"].ToString())</td>
+                                @*<td></td>
+                                    <td></td>*@
+                                <td>
+                                    <button type="button" class="btn btn-xs btn-primary ListBtn" id="edit_@userId">編輯</button>
+                                    @*<button type="button" class="btn btn-xs btn-primary ListBtn" id="perm_@userId">Perm</button>*@
+                                    <button type="button" class="btn btn-xs btn-primary ListBtn" id="action_@userId">特殊權限</button>
+                                    @*<button type="button" class="btn btn-xs btn-danger ListBtn" id="del_@userId">刪除</button>*@
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

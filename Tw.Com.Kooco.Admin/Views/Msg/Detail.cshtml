@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Tw.Com.Kooco.Admin.Models.Msg.DetailReport>
+
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    int index = 0;
+}
+
+<h2>Detail</h2>
+
+<table class="table">
+    <tr>
+        <th>#</th>
+        <th>电话号码</th>
+        <th>内容</th>
+        <th>日期</th>
+        <th>状态</th>
+    </tr>
+
+@foreach (var item in Model) {
+    index++;
+    <tr>
+        <td>
+            @index
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.phonenumber)
+        </td>
+
+
+        <td>
+            @Html.DisplayFor(modelItem => item.body)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.date)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.state)
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,10 @@
+﻿@using MvcSiteMapProvider.Web.Html
+
+<div class="warning" id="warning" style="display: none;"></div>
+
+@*<h3 class="page-title">
+        @ViewBag.Title <small>@ViewBag.note</small>
+    </h3>*@
+<div class="page-bar">
+    @Html.MvcSiteMap().SiteMapPath()
+</div>

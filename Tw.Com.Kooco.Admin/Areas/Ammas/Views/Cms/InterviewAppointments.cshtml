@@ -1,0 +1,107 @@
+﻿@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+@using System.Data
+@using Newtonsoft.Json
+@using Tw.Com.Kooco.Admin.Areas.Ammas.Models.Parameters
+@using Tw.Com.Kooco.Admin.Misc
+
+@section PageLevel {
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/select2/select2.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/datatables/extensions/Scroller/css/dataTables.scroller.min.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/datatables/extensions/ColReorder/css/dataTables.colReorder.min.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/bootstrap-datepicker/css/datepicker3.css" />
+}
+
+@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    var indexBanners = Model.List.Tables[1];
+    var count = Convert.ToInt32(Model.List.Tables[0].Rows[0][0]);
+    var param = (InterviewAppointmentParameter)Model.Data;
+    var queryParam = $"KeyWord={HttpUtility.UrlEncode(param.KeyWord)}&StartDate={param.StartDate}&EndDate={param.EndDate}";
+    var js = $"<script type='text/javascript'>var data = {JsonConvert.SerializeObject(param)};</script>";
+
+}
+@section FooterScript{@MvcHtmlString.Create(js)}
+@helper InterviewType(int type)
+{
+    switch (type) {
+        case 1:
+            <span>我想要直接預約專人訪談</span>
+            break;
+        case 2:
+            <span>請先電話於我聯繫</span>
+            break;
+        case 3:
+            <span>請先郵寄相關資料給我</span>
+            break;
+    }
+
+}
+<div class="row">
+    <div class="col-md-12 col-sm-12 form-inline">
+        <div style="float:right;">
+
+            @*<input type="text" class="form-control input-sm" style="width: 160px; cursor: pointer;" maxlength="64" placeholder="Start Date" value='@param.StartDate' id='start' /> ~
+                <input type="text" class="form-control input-sm" style="width: 160px; cursor: pointer;" maxlength="64" placeholder="End Date" value='@param.EndDate' id='end' />*@
+            <div class="input-group input-large date-picker input-daterange" data-date="" data-date-format="yyyy-mm-dd">
+                <input type="text" class="form-control" id="start" value="@param.StartDate">
+                <span class="input-group-addon">
+                    to
+                </span>
+                <input type="text" class="form-control" id="end" value="@param.EndDate">
+            </div>
+
+            <input type="text" class="form-control" style="width: 160px;" maxlength="64" placeholder="Keyword" value="@param.KeyWord" id="kw" />
+            <button type="button" class="btn btn-primary" id="search">Search</button>
+            <button type="button" class="btn btn-primary" id="reset">Reset</button>
+        </div>
+    </div>
+</div>
+
+@{
+    var j = new Pagination("Page");
+    j.Set(param.Page, param.PageSize, count, queryParam);
+    @MvcHtmlString.Create(j.Render())
+}
+
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <div class="table-scrollable">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Serial</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Tel</th>
+                        <th>Date</th>
+                        <th>Manage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        foreach (DataRow row in indexBanners.Rows)
+                        {
+                            var id = Convert.ToInt32(row["InterviewAppointmentId"]);
+                            var dateString = DateTime.Parse(row["Date"].ToString()).ToString("yyyy-MM-dd");
+                            <tr id="row_@id">
+                                <td>@row["Serial"]</td>
+                                <td>@row["Name"]</td>
+                                <td>@row["Email"]</td>
+                                <td>@row["Tel"]</td>
+                                <td>@InterviewType(Convert.ToInt32(row["InterviewType"]))</td>
+                                <td>@dateString</td>
+                                <td>
+                                    <button type="button" class="btn btn-xs btn-primary ListBtn" id="delete_@id">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@{
+    @MvcHtmlString.Create(j.Render())
+}

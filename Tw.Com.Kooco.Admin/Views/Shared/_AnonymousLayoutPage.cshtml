@@ -1,0 +1,46 @@
+﻿@using Tw.Com.Kooco.Admin.Models
+
+<!DOCTYPE html>
+<html lang="zh-TW" class="no-js">
+<!-- BEGIN HEAD -->
+<head>
+    <meta charset="utf-8" />
+    <title>BMS For Ammas @WebStatus.Version - @ViewBag.Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+    @RenderSection("HeadMeta", false)
+    @{
+        var baseUrl = string.Format("{0}://{1}", Request.Url.Scheme, Request.ServerVariables.Get("HTTP_HOST"));
+    }
+    <base href="@baseUrl" />
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+    @Styles.Render("~/css/golbal_mandatory")
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN PAGE LEVEL PLUGIN STYLES -->
+    @*<link href="~/Content/admin/pages/css/error.css" rel="stylesheet" type="text/css" />*@
+    <!-- END PAGE LEVEL PLUGIN STYLES -->
+    <!-- BEGIN PAGE STYLES -->
+    @Styles.Render("~/css/page_styles")
+    <!-- END PAGE STYLES -->
+    <!-- BEGIN THEME STYLES -->
+    @Styles.Render("~/css/theme_styles")
+    <!-- END THEME STYLES -->
+    <link rel="shortcut icon" href="favicon.ico" />
+</head>
+<!-- END HEAD -->
+<!-- BEGIN BODY -->
+<body>
+    <!-- BEGIN CONTAINER -->
+    @RenderBody()
+    <!-- END CONTAINER -->
+    <!-- BEGIN FOOTER -->
+    @Html.Partial("_Footer")
+    <!-- END FOOTER -->
+    @RenderSection("FooterScript", false)
+    <script src="/Content/kooco/plugins/require/require.min.js" data-main="/Scripts/_appRun" async="async" defer="defer"> </script>
+</body>
+<!-- END BODY -->
+</html>

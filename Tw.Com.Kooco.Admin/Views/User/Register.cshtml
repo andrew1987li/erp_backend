@@ -1,0 +1,31 @@
+﻿@using Tw.Com.Kooco.Admin.Models.Parameters
+@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Login.cshtml";
+    var detail = ((UserParameter)Model.Data).User;
+                //var js = string.Format("<script type='text/javascript'>var ok = {0},data={1},code ={2};</script>", @Model.Ok.ToString().ToLower(), JsonConvert.SerializeObject(detail), Model.Code);
+    //@section FooterScript{@MvcHtmlString.Create(@js)}
+}
+
+<h3>Create account</h3>
+<div class="form-group">
+    <label class="control-label visible-ie8 visible-ie9">Account</label>
+    <input class="form-control placeholder-no-fix" type="text" id="account" value="@detail.Account" placeholder="Account">
+</div>
+<div class="form-group">
+    <label class="control-label visible-ie8 visible-ie9">Password</label>
+    <input class="form-control placeholder-no-fix" type="password" id="pw" value="" placeholder="Password">
+</div>
+<div class="form-group">
+    <label class="control-label visible-ie8 visible-ie9">First Name</label>
+    <input class="form-control placeholder-no-fix" type="text" id="firstName" value="@detail.FirstName" placeholder="First Name">
+</div>
+<div class="form-group">
+    <label class="control-label visible-ie8 visible-ie9">Last Name</label>
+    <input class="form-control placeholder-no-fix" type="text" id="lastName" value="@detail.LastName" placeholder="Last Name">
+</div>
+<div class="form-actions">
+    <button type="button" class="btn btn-default" id="cancel">Cancel</button>
+    <button type="button" class="btn btn-success uppercase pull-right" id="register">Register</button>
+</div>

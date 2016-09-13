@@ -1,0 +1,83 @@
+﻿@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+@using Newtonsoft.Json
+@using Tw.Com.Kooco.Admin.Areas.Ammas.Models.Parameters
+@{
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+    var data = (InvestorParameter)Model.Data;
+    var js = $"<script type='text/javascript'>var data = {JsonConvert.SerializeObject(data)};</script>";
+    var publishDate = (data.Entity.PublishDate == "1900-01-01") ? "" : data.Entity.PublishDate;
+    var link = (string.IsNullOrEmpty(data.Entity.HyperLink)) ? "http://" : data.Entity.HyperLink;
+}
+
+@section PageLevel {
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/bootstrap-datepicker/css/datepicker3.css" />
+    <link rel="stylesheet" type="text/css" href="/Content/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />
+}
+
+@section FooterScript{@MvcHtmlString.Create(js)}
+
+<div class="notifications bottom-left"></div>
+
+<div class="portlet-body form">
+    <!-- BEGIN FORM-->
+    <form action="#" id="form_1" class="form-horizontal form-bordered form-row-stripped">
+        <input type="hidden" name="Entity.InvestorId" value="@data.Entity.InvestorId">
+        <div class="form-body">
+            <div class="form-group required">
+                <label class="col-md-3 control-label">Types Of Catagory</label>
+                <div class="col-md-9">
+                    <input type="text" name="Entity.TypesOfCatagory" class="form-control numeric" value="@data.Entity.TypesOfCatagory" />
+                </div>
+            </div>
+
+            <div class="form-group required">
+                <label class="col-md-3 control-label">Publish Date</label>
+                <div class="col-md-9">
+                    <input type="text" id="PublishDate" name="Entity.PublishDate" class="form-control hasDatepicker" value="@publishDate" data-date-format="yyyy-MM-dd">
+                </div>
+
+            </div>
+
+
+            <div class="form-group required">
+                <label class="col-md-3 control-label">Titel</label>
+                <div class="col-md-9">
+                    <textarea id="Entity.Titel" name="Entity.Titel" class="form-control" rows="6" placeholder="">@data.Entity.Titel</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-3 control-label">Link</label>
+            <div class="col-md-9">
+                <input type="text" name="Entity.HyperLink" class="form-control" value="@link" placeholder="Investor Hyperlink">
+            </div>
+        </div>
+        <div class="form-group required">
+            <label class="col-md-3 control-label">Upload Documentation</label>
+            <div class="col-md-9">
+                <input type="text" id="img" name="Entity.DocPath" class="form-control" value="@data.Entity.DocPath" placeholder="Png or Jpg file">
+                <span class="btn btn-success fileinput-button" style="padding: 4px 12px;">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>Add files...</span>
+                    <input id="fileupload" type="file" name="file" multiple>
+                </span>
+                <br />
+                <div class="progress progress-striped active" style="width:80%;margin-bottom:3px;">
+                    <div id="progress-bar" class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0;">
+                        <span class="sr-only"></span>
+                    </div>
+                </div>
+                <img id="previewImg" src="@data.Entity.DocPath" alt="" />
+            </div>
+        </div>
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-offset-3 col-md-9">
+                    <button type="submit" class="btn btn-primary js_submit"><i class="fa fa-check"></i> Save</button>
+                    <button type="button" class="btn btn-default js_back">back to list</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>

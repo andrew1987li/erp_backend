@@ -1,0 +1,38 @@
+﻿@using Newtonsoft.Json
+@using Tw.Com.Kooco.Admin.Models.Parameters
+@model Tw.Com.Kooco.Admin.Models.InternalDataTransferToView
+
+@{
+    ViewBag.Title = "新增角色";
+    Layout = "~/Views/Shared/_LayoutPage.cshtml";
+}
+
+<div class="portlet-body form">
+    <!-- BEGIN FORM-->
+    <form action="#" id="form1" class="form-horizontal form-bordered form-row-stripped">
+        <input type="hidden" name="ID" value="" />
+        <div class="form-body">
+            <div class="form-group required">
+                <label class="col-md-3 control-label">角色名稱</label>
+                <div class="col-md-9">
+                    <input type="text" name="Name" class='form-control' value="" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">停用</label>
+                <div class="col-md-9">
+                    <input type="checkbox" name="Disable" class="make-switch" data-size="normal">
+                </div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <div class="row">
+                <div class="col-md-offset-3 col-md-9">
+                    <button type="submit" class="btn btn-primary js_submit"><i class="fa fa-check"></i> Save</button>
+                    <button type="button" class="btn btn-default js_back">back to list</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- END FORM-->
+</div>
